@@ -6,10 +6,11 @@
         <title>Product Comments</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="css/main.css">
+        <script src="//www.parsecdn.com/js/parse-1.3.1.min.js"></script>
     </head>
     <body>
 
-        <main class="container">
+        <main class="container" ng-app="commentsApp" ng-controller="commentController">
             <section>
                 <img src="img/super-bass-o-matic-76.jpg" alt="product picture" class="product-picture">
                 <h1>The Super Bass-o-Matic '76</h1>
@@ -18,24 +19,75 @@
 
             <section>
                 <h2>Add a Comment</h2>
-                <!--  
-                put a form here for entering a new comment
-                the user must select a rating, and enter a name, title, and comment body
-                before the comment can be saved to the server
-                for the rating selection, use the Angular Bootstrap Rating directive 
-                http://angular-ui.github.io/bootstrap/#/rating
-                their script file is included below
-                -->
+               
+
+                <form ng-submit="addComment(newComment)">
+                <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name" placeholder="Your User Name" required ng-model="newComment.name">
+                </div>
+                <div class="form-group">
+                    <label for="title">Comment Title</label>
+                    <input type="text" class="form-control" id="title" placeholder="Comment Title" required ng-model="newComment.title">
+                </div>
+                <div class="form-group">
+                       <label for="rating">Rating</label>
+                             <rating id="rating" max="5" ng-model="newComment.rating"></rating>
+                </div>
+                  <div class="form-group">
+                    <label for="body">Comment</label>
+                    <textarea class="form-control" rows="3" id="body" placeholder="Your Comment" required ng-model="newComment.body"></textarea>
+                  </div>
+
+
+                  <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+
+
             </section>
 
             <section>
-                <h2>Comments</h2>
-                <!-- 
-                display existing comments here
-                each comment should also have UI allowing the user to vote up/down the comment
-                as well as delete it
-                 -->
+                <h2 id="printedComments">Comments</h2>
+                 
+                 <p id="placeholder" ng-if="comment && comment.length == 0">No comments yet. Be the first to review this!</p>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Rating</th>
+                            <th>Comment Title</th>
+                            <th>Comment</th>
+                            <th>Author</th>
+                            <th>Vote</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="comment in comment">
+                            <td ng-class="{rating: comment.rating}">{{comment.rating}}</td>
+                            <td ng-class="{title: comment.title}">{{comment.title}}</td>
+                            <td ng-class="{body: comment.body}">{{comment.body}}</td>
+                            <td ng-class="{name: comment.name}">{{comment.name}}</td>
+
+
+                            <td>
+                                <input type="image" id="agree" src="img/yes-smiley.gif" alt="Agree"  ng-click="increaseRank(comment, 1)"/>
+                            
+                                <input type="image" id="disagree" src="img/dislike.jpg" alt="Disagree" ng-click="increaseRank(comment, -1)"/>
+                            </td>
+                            <td>
+                                <input type="image" id="delete" src="img/delete.png" alt="Delete" ng-click="delete(comment)"/>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+              
+
             </section>
+
+
 
         </main>
 
